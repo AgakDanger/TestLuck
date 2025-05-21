@@ -1,23 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"></html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Your Public Info Viewer</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Your Personal Information</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
-  <h1>Your Public Info</h1>
-  <p class="subtitle">This page shows your IP address, location, browser info, and more.</p>
-  <div id="info" class="info-card" aria-live="polite" aria-busy="true">
-    <p class="loading">Loading your information…</p>
-  </div>
-  <div id="sending" class="sending-message" aria-live="polite" aria-atomic="true" style="display:none;">
-    Sending this information to yudhistira.4dhi@gmail.com...
-  </div>
-  <div class="footer">Sending this information to yudhistira.4dhi@gmail.com .</div>
+    <div class="container">
+        <h2>Your Personal Information</h2>
+        <div class="info">
+            <span class="label">IP Address:</span>
+            <span class="value" id="ip">Loading...</span>
+        </div>
+        <div class="info">
+            <span class="label">Location:</span>
+            <span class="value" id="location">Loading...</span>
+        </div>
+        <div class="info">
+            <span class="label">Browser:</span>
+            <span class="value" id="browser">Loading...</span>
+        </div>
+        <div class="info">
+            <span class="label">Entrance URL:</span>
+            <span class="value" id="entrance">Loading...</span>
+        </div>
+        <div class="info">
+            <span class="label">Exit URL:</span>
+            <span class="value" id="exit">Loading...</span>
+        </div>
+    </div>
+    <script src="script.js"></script>
 
-  <script src="script.js"></script>
 </body>
 </html>
-
