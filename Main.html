@@ -1,0 +1,160 @@
+index.html
+html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your Public Info Viewer</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+  body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+    box-sizing: border-box;
+  }
+  h1 {
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 0.2rem;
+  }
+  p.subtitle {
+    font-weight: 400;
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.8;
+  }
+  .info-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 2rem;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  }
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+  .info-item:last-child {
+    border: none;
+  }
+  .label {
+    font-weight: 600;
+    opacity: 0.85;
+  }
+  .value {
+    font-weight: 400;
+    max-width: 60%;
+    text-align: right;
+    word-wrap: break-word;
+  }
+  .footer {
+    margin-top: auto;
+    opacity: 0.6;
+    font-size: 0.9rem;
+  }
+  .loading {
+    text-align: center;
+    margin: 3rem 0;
+    font-style: italic;
+    opacity: 0.7;
+  }
+  .sending-message {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-style: italic;
+    font-weight: 600;
+    opacity: 0.85;
+    color: #ffd966;
+    user-select: none;
+  }
+</style>
+</head>
+<body>
+  <h1>Your Public Info</h1>
+  <p class="subtitle">This page shows your IP address, location, browser info, and more.</p>
+  <div id="info" class="info-card" aria-live="polite" aria-busy="true">
+    <p class="loading">Loading your information…</p>
+  </div>
+  <div id="sending" class="sending-message" aria-live="polite" aria-atomic="true" style="display:none;">
+    Sending this information to yudhistira.4dhi@gmail.com...
+  </div>
+  <div class="footer">Sending this information to yudhistira.4dhi@gmail.com .</div>
+
+  <script>
+    async function fetchJson(url) {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Network response was not ok');
+      return response.json();
+    }
+
+    async function displayInfo() {
+      const infoDiv = document.getElementById('info');
+      const sendingDiv = document.getElementById('sending');
+      try {
+        // Get IP address
+        const ipData = await fetchJson('https://api.ipify.org?format=json');
+
+        // Get location info using ip-api
+        const geoData = await fetchJson('https://ip-api.com/json/' + ipData.ip);
+
+        // Get user agent
+        const userAgent = navigator.userAgent;
+
+        // Clear loading text
+        infoDiv.innerHTML = '';
+
+        const items = [
+          { label: 'IP Address', value: ipData.ip },
+          { label: 'Country', value: geoData.country || 'N/A' },
+          { label: 'Region', value: geoData.regionName || 'N/A' },
+          { label: 'City', value: geoData.city || 'N/A' },
+          { label: 'ZIP Code', value: geoData.zip || 'N/A' },
+          { label: 'Timezone', value: geoData.timezone || 'N/A' },
+          { label: 'ISP', value: geoData.isp || 'N/A' },
+          { label: 'Browser Info', value: userAgent }
+        ];
+
+        items.forEach(({ label, value }) => {
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'info-item';
+
+          const labelDiv = document.createElement('div');
+          labelDiv.className = 'label';
+          labelDiv.textContent = label;
+
+          const valueDiv = document.createElement('div');
+          valueDiv.className = 'value';
+          valueDiv.textContent = value;
+
+          itemDiv.appendChild(labelDiv);
+          itemDiv.appendChild(valueDiv);
+          infoDiv.appendChild(itemDiv);
+        });
+
+        infoDiv.setAttribute('aria-busy', 'false');
+
+        // Show fake sending message after info loads
+        sendingDiv.style.display = 'block';
+
+      } catch (error) {
+        infoDiv.innerHTML = '<p class="loading">Failed to load information. Please check your internet connection.</p>';
+        console.error(error);
+      }
+    }
+
+    displayInfo();
+  </script>
+</body>
+</html>
+
